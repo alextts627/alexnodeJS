@@ -1,0 +1,47 @@
+var express = require('express');
+var router = express.Router();
+
+var db  = require('../db');
+
+
+//insert css file here 
+//app.use('/cssFiles', express.static(__dirname + '/assets'));
+
+router.get('/', function(req,res) {
+console.log('this is login index');
+
+ //session = req.session;
+//console.log(session);
+ // if(session.id){
+    //res.redirect('/redirects');
+ // }
+//console.log(__dirname+'/../views/');
+//    res.render('index', { title: 'Express' });   
+    // res.sendFile('login.html', {root: __dirname+'/../views/' });
+});
+
+router.post('/login', function(req,res){
+  //res.end(JSON.stringify(req.body));
+  session = req.session;
+  if(session.id){
+    res.redirect('/redirects');
+  }
+  if(req.body.username == 'admin' && req.body.password == 'admin'){
+  	session.UID = req.body.username;
+
+  }
+  res.redirect('/redirects');
+});
+
+router.get('/redirects', function(req, res){
+  session = req.session;
+  if(session.UID){
+    console.log(session.UID);
+    res.redirect('/admin');
+  }else{
+    res.end('not admin');
+  }
+});
+
+module.exports = router;
+

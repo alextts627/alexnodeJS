@@ -17,6 +17,7 @@ console.log(req.cookies.alex);
         if (err) throw err;
         console.log('The solution is: ', rows);
 
+
 //       res.send(rows);
 
     });

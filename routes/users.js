@@ -117,7 +117,187 @@ router.get('/:id', function(req, res) {
 //router.delete('/', function(req, res, next) {
 //  res.send('respond with a resource');
 //});
+// post obj db update(change everything except id)
+router.post('/:id', function(req, res, next) {
+	var id =req.params.id;
+  var user_name =req.params.user;
+  var password =req.params.password;
+  var email =req.params.email;
+	//var newId = req.body;
 
+	
+
+  var cmd = "INSERT INTO `users` (Uid,Acc,Pass,Email,Create_time) VALUES ('id','user_name','password','email', now())";
+
+    //get the info with the assign id from DB
+  db.query(cmd, function(err, rows, fields) {
+        
+    //check if DB is coonected
+    if (err){
+      res.send('DB not connected'+err);
+      exit;
+    }
+    console.log('The solution is: ', rows);
+    //search the uid from db
+    if(rows.length == 0){
+      console.log(111);
+                //res.sendStatus(404);
+      res.send('id not exist');
+    }
+    
+    //console.log(rows[0].Acc);
+    //  res.send('respond with a resource');
+    if(id){
+      console.log(222);
+      //set cookie
+      //res.cookie();
+      //res send status success
+      //res.sendStatus(200); // status call
+      res.send('update success');
+    }
+    else{
+      console.log('id not exist');
+    }
+  })
+});
+
+
+router.post('/:id', function(req, res, next) {
+  var reqObj = req.body;
+  console.log(reqObj);
+
+  var cmd = "INSERT INTO `users` SET ?";
+  var cmdVal = { "Acc" : reqObj.Acc, "Pass" : reqObj.Pass, "Email" : reqObj.Email, "Create_time" : now() };
+    
+  db.query(cmd, cmdVal, function(err, rows, fields) {
+        
+    //check if DB is coonected
+    if (err){
+      res.send('DB not connected'+err);
+      exit;
+    }
+    console.log('The solution is: ', rows);
+    //search the uid from db
+    if(rows.length == 0){
+      console.log(111);
+                //res.sendStatus(404);
+      res.send('id not exist');
+    }
+    
+    //console.log(rows[0].Acc);
+    //  res.send('respond with a resource');
+    if(id){
+      console.log(222);
+      //set cookie
+      //res.cookie();
+      //res send status success
+      //res.sendStatus(200); // status call
+      res.send('update success');
+    }
+    else{
+      console.log('id not exist');
+    }
+  })
+});
+
+
+
+
+//post id and one parameter 
+router.put('/:id', function(req, res, next) {
+	
+  //var cmd = mySQL alter into the uid
+  var id =req.params.id;
+  var user_name =req.params.user;
+  var password =req.params.password;
+  var email =req.params.email;
+ 
+  var reqObj = req.body;
+  
+  console.log(reqObj);
+
+  if(!(id||reqObj)){
+    res.send('nothing to update');
+  }
+  else{
+  
+
+    
+    var cmd = "INSERT INTO `users` (Uid,Acc,Pass,Email,Create_time) VALUES ('id','user_name','password','email', now())";
+
+    //get the info with the assign id from DB
+    db.query(cmd, function(err, rows, fields) {
+        
+    //check if DB is coonected
+      if (err){
+        res.send('DB not connected'+err);
+        exit;
+      }
+      console.log('The solution is: ', rows);
+      //search the uid from db
+      if(rows.length == 0){
+        console.log(111);
+                //res.sendStatus(404);
+        res.send('id not exist');
+      }
+    
+      //console.log(rows[0].Acc);
+      //  res.send('respond with a resource');
+      if(id){
+        console.log(222);
+      //set cookie
+      //res.cookie();
+      //res send status success
+      //res.sendStatus(200); // status call
+        res.send('update success');
+      }
+      else{
+        console.log('id not exist');
+      }
+    })
+  }
+  //check if the uid match in DB 
+  //connect to the DB
+  //and update the info into the DB
+});
+
+// id , delete with id
+router.delete('/:id', function(req, res, next) {
+  //asign id
+  var id =req.params.id;
+  // delete record in table command
+  var cmd = "DELETE FROM `users` WHERE Uid = 'id'";
+
+  db.query(cmd, function(err, rows, fields) {
+        
+            //check if DB is coonected
+            if (err){
+                res.send('DB not connected'+err);
+            }
+            console.log('The solution is: ', rows);
+            //if acc not exist
+            if(rows.length == 0){
+                console.log(111);
+                //res.sendStatus(404);
+                res.send('not exist');
+            }
+            //db check acc/pw
+            //console.log(rows[0].Acc);
+            //  res.send('respond with a resource');
+            if(id){
+                console.log(222);
+                //set cookie
+                //res.cookie();
+            
+                //res send status success
+                //res.sendStatus(200); // status call
+                res.send('delete success');
+            }
+            else{
+                console.log('id not exist');
+            }
+  })
+});
 
 
 module.exports = router;

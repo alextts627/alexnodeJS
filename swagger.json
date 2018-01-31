@@ -1,0 +1,5683 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "No description",
+    "version" : "0.0.1",
+    "title" : "CHPS API contract online",
+    "contact" : { }
+  },
+  "host" : "localhost:10010",
+  "schemes" : [ "http" ],
+  "consumes" : [ "application/json" ],
+  "produces" : [ "application/json" ],
+  "paths" : {
+    "/test/version/control" : { },
+    "/api-test/alex" : { },
+    "/auth/oauth/token" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "summary" : "Get Auth Token",
+        "description" : "Authenticate user and retreive access token.",
+        "operationId" : "getAuthToken",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "required" : false,
+          "type" : "string",
+          "description" : "Basic bXktY2xpZW50LXdpdGgtc2VjcmV0OnNlY3JldA==",
+          "x-example" : "Basic bXktY2xpZW50LXdpdGgtc2VjcmV0OnNlY3JldA=="
+        }, {
+          "name" : "grant_type",
+          "in" : "formData",
+          "required" : true,
+          "type" : "string",
+          "description" : "grant_type=password"
+        }, {
+          "name" : "username",
+          "in" : "formData",
+          "required" : true,
+          "type" : "string",
+          "description" : "username=mcarney"
+        }, {
+          "name" : "password",
+          "in" : "formData",
+          "required" : true,
+          "type" : "string",
+          "description" : "password=someSecurePassword"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/Auth Token Response"
+            }
+          }
+        }
+      }
+    },
+    "/security-context/security/context" : {
+      "get" : {
+        "tags" : [ "Auth" ],
+        "summary" : "Get profile/security context for a user.",
+        "operationId" : "getSecurityContext",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "required" : true,
+          "type" : "string",
+          "x-example" : "Bearer access_token retrieved from auth endpoint."
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/Context Response"
+            }
+          }
+        }
+      }
+    },
+    "/auth/oauth/revoke-token" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "summary" : "Logout and invaliate a token",
+        "operationId" : "logout",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "required" : true,
+          "type" : "string",
+          "x-example" : "Bearer access_token retrieved from auth endpoint."
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/Logout Response"
+            }
+          }
+        }
+      }
+    },
+    "/auth/users/{uid}/password" : {
+      "put" : {
+        "tags" : [ "Auth" ],
+        "summary" : "Change user password",
+        "operationId" : "changePassword",
+        "consumes" : [ ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "object",
+            "required" : [ "newPassword", "oldPassword" ],
+            "properties" : {
+              "oldPassword" : {
+                "type" : "string"
+              },
+              "newPassword" : {
+                "type" : "string"
+              },
+              "hint" : {
+                "type" : "string"
+              }
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "uid",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/addresses/{addrid}" : {
+      "put" : {
+        "tags" : [ "AddressManager" ],
+        "summary" : "",
+        "operationId" : "put",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AddressPutProperty"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "addrid",
+        "in" : "path",
+        "required" : true,
+        "type" : "number",
+        "format" : "double"
+      } ]
+    },
+    "/addresses" : {
+      "get" : {
+        "tags" : [ "AddressManager" ],
+        "description" : "Returns addresses",
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "TypeId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "description" : "RA/DA"
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "required" : false,
+          "type" : "number",
+          "format" : "double",
+          "description" : "addr id"
+        }, {
+          "name" : "sort",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "description" : "sort"
+        }, {
+          "name" : "order",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "description" : "order"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : false,
+          "type" : "number",
+          "format" : "double",
+          "description" : "offset"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "type" : "number",
+          "format" : "double",
+          "description" : "limit"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/AddressResponse"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "AddressManager" ],
+        "summary" : "",
+        "operationId" : "post",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AddressPostProperty"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      }
+    },
+    "/client-administration/translations/{translationType}" : {
+      "get" : {
+        "tags" : [ "Client Administrantion Manager" ],
+        "summary" : "Get all translation types",
+        "operationId" : "getAllTransByType",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/TranslationGetAll"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Client Administrantion Manager" ],
+        "summary" : "Post add a new translation type",
+        "operationId" : "postAddTransByType",
+        "consumes" : [ ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/TranslationPostPut"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "translationType",
+        "in" : "path",
+        "required" : true,
+        "type" : "string",
+        "description" : "claims/documents/recipients"
+      } ]
+    },
+    "/client-administration/translations/{translationType}/{translationTypeId}" : {
+      "get" : {
+        "tags" : [ "Client Administrantion Manager" ],
+        "summary" : "Get single translation type",
+        "operationId" : "getTransByTypeId",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/TranslationsGetOne"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Client Administrantion Manager" ],
+        "summary" : "Modify a translation Type",
+        "operationId" : "putTransByTypeId",
+        "consumes" : [ ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/TranslationPostPut"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "translationType",
+        "in" : "path",
+        "required" : true,
+        "type" : "string",
+        "description" : "claims/documents/recipients"
+      }, {
+        "name" : "translationTypeId",
+        "in" : "path",
+        "required" : true,
+        "type" : "integer",
+        "description" : "123"
+      } ]
+    },
+    "/client-administration/translations/{translationType}/normalizedTypes" : {
+      "get" : {
+        "tags" : [ "Client Administrantion Manager" ],
+        "summary" : "Get all normalized translation type options",
+        "operationId" : "getTransOptions",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/TranslationTypeOptions"
+              }
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "translationType",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/client-administration/translations/{translationType}/clientTypes" : {
+      "get" : {
+        "tags" : [ "Client Administrantion Manager" ],
+        "summary" : "Get all client document translation type options",
+        "operationId" : "getClientTypeOptions",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/TranslationClientTypeOptions"
+              }
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "translationType",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/client-administration/addressExclusions" : {
+      "get" : {
+        "summary" : "get all address exclusions",
+        "operationId" : "getAllAEX",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/AddressExclusion"
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "add an address exclusion",
+        "operationId" : "createAEX",
+        "consumes" : [ ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AddressExclusion"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200"
+          }
+        }
+      }
+    },
+    "/client-administration/addressExclusions/{id}" : {
+      "get" : {
+        "summary" : "get an address exclusion",
+        "operationId" : "getAEX",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/AddressExclusion"
+            }
+          }
+        }
+      },
+      "put" : {
+        "summary" : "update an address exclusion",
+        "operationId" : "updateAEX",
+        "consumes" : [ ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AddressExclusion"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "delete an address exclusion",
+        "operationId" : "removeAEX",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/client-administration/clientSettings/groupRules" : {
+      "get" : {
+        "tags" : [ "Client Administrantion Manager" ],
+        "summary" : "get all settings of group rules",
+        "operationId" : "getSettingsGroupRules",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/getSettingsGroupRules"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Client Administrantion Manager" ],
+        "summary" : "post settings of group rules",
+        "operationId" : "putSettingsGroupRules",
+        "consumes" : [ ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/postSettingsGroupRules"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200"
+          }
+        }
+      }
+    },
+    "/client-administration/clientSettings/{subManager}/dropdowns" : {
+      "get" : {
+        "tags" : [ "Client Administrantion Manager" ],
+        "summary" : "get all dropdown values",
+        "operationId" : "getClientDropdowns",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/getClientDropdowns"
+              }
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "subManager",
+        "in" : "path",
+        "required" : true,
+        "type" : "string",
+        "x-example" : "clientSettings"
+      } ]
+    },
+    "/client-administration/clientSettings/{subManager}/saved" : {
+      "get" : {
+        "tags" : [ "Client Administrantion Manager" ],
+        "summary" : "get saved settings",
+        "operationId" : "getClientSaved",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/ClientSaved"
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Client Administrantion Manager" ],
+        "summary" : "put saved settings",
+        "operationId" : "putClientSettings",
+        "consumes" : [ ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/ClientSaved"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "subManager",
+        "in" : "path",
+        "required" : true,
+        "type" : "string",
+        "x-example" : "clientSettings"
+      } ]
+    },
+    "/document-management/document/hold-info/multilevel" : {
+      "post" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "Get previous hold transaction history of a file or group",
+        "description" : "Pass in  File Object",
+        "operationId" : "txnHistory",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/File"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/Transaction History"
+            }
+          }
+        }
+      }
+    },
+    "/document-management/document/hold-info/document" : {
+      "post" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "Get previous hold transaction history of a document",
+        "description" : "Pass in Document Object",
+        "operationId" : "txnHistory",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Documents"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/Transaction History"
+            }
+          }
+        }
+      }
+    },
+    "/document-management/document/external-tracking/{documentKey}/{copyNumber}" : {
+      "get" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "Get the list of live tracking info",
+        "operationId" : "trackingInfo",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/TrackingDetailsResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "documentKey",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "copyNumber",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/document-management/document/route/multilevel" : {
+      "post" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "route multilevel",
+        "operationId" : "documentAction",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RouteFilePost"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/TransactionResponse"
+            }
+          }
+        }
+      }
+    },
+    "/document-management/document/route/document" : {
+      "post" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "route documents",
+        "description" : "",
+        "operationId" : "documentAction",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RouteDocumentPost"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/TransactionResponse"
+            }
+          }
+        }
+      }
+    },
+    "/document-management/document/release/multilevel" : {
+      "post" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "release files",
+        "operationId" : "documentAction",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ReleaseFilePost"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/TransactionResponse"
+            }
+          }
+        }
+      }
+    },
+    "/document-management/document/release/document" : {
+      "post" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "release documents",
+        "operationId" : "documentAction",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ReleaseDocumentPost"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/TransactionResponse"
+            }
+          }
+        }
+      }
+    },
+    "/document-management/document/purge/multilevel" : {
+      "post" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "purge file or group",
+        "description" : "file/multilevel representations.",
+        "operationId" : "documentAction",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/HoldFilePost"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/TransactionResponse"
+            }
+          }
+        }
+      }
+    },
+    "/document-management/document/purge/document" : {
+      "post" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "purge documents",
+        "description" : "list of documentIds",
+        "operationId" : "documentAction",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/HoldDocumentPost"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/TransactionResponse"
+            }
+          }
+        }
+      }
+    },
+    "/document-management/document/internal-tracking/{documentKey}/{copyId}" : {
+      "get" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "Get the internal processing information for a document",
+        "operationId" : "processInfo",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/TrackingDetailsResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "documentKey",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "copyId",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/document-management/document/override/{clientLayout}" : {
+      "post" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "override",
+        "description" : "List of File Keys.",
+        "operationId" : "fileOverride",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "x-examples" : {
+            "application/json" : "[\"1233455\",\"32423425\"]"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/FileKeysResponse"
+            }
+          },
+          "400" : {
+            "description" : "Status 400",
+            "schema" : {
+              "$ref" : "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "clientLayout",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/document-management/document/hold/multilevel" : {
+      "post" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "hold files",
+        "description" : "file/multilevel representations.",
+        "operationId" : "documentAction",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/HoldFilePost"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/TransactionResponse"
+            }
+          }
+        }
+      }
+    },
+    "/document-management/document/hold/document" : {
+      "post" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "hold documents",
+        "operationId" : "documentAction",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/HoldDocumentPost"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/TransactionResponse"
+            }
+          }
+        }
+      }
+    },
+    "/document-management/document/file-keys/{action}/{level}/{clientLayout}" : {
+      "get" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "Get all File keys for an action and type filter.",
+        "description" : "Actions can be - Hold, Release, Route, Purge and all for global search\nType can be - Document, Group, File and all for global search",
+        "operationId" : "getFileKeys",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Array of file keys inside data.",
+            "schema" : {
+              "$ref" : "#/definitions/FileKeysResponse"
+            }
+          },
+          "400" : {
+            "description" : "Status 400",
+            "schema" : {
+              "$ref" : "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "action",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "level",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "clientLayout",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/document-management/document/delivery-info/multilevel" : {
+      "post" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "Get Delivery History of File or Group",
+        "description" : "Pass in a document object",
+        "operationId" : "deliveryHistory",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/File"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/DeliveryInfoResponse"
+            }
+          }
+        }
+      }
+    },
+    "/document-management/document/delivery-info/document" : {
+      "post" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "Get Delivery History of Document",
+        "description" : "Pass in a document object",
+        "operationId" : "deliveryHistory",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Documents"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/DeliveryInfoResponse"
+            }
+          }
+        }
+      }
+    },
+    "/document-management/document/copy-details/{documentKey}" : {
+      "get" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "Get the list of copy information",
+        "operationId" : "copyInfo",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/CopyInfoResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "documentKey",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/document-management/document/copy-details/pdf/{documentKey}/{copyNumber}" : {
+      "parameters" : [ {
+        "name" : "documentKey",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "copyNumber",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/document-management/document/address-details/document/{documentKey}" : {
+      "get" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "Get Address Details of Document",
+        "description" : "Pass document key in the request path",
+        "operationId" : "address",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/AddressResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "documentKey",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/document-management/document/management-search" : {
+      "post" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "Search for document, file or group",
+        "operationId" : "multiSearch",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Search"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/DocumentFileResponse"
+            }
+          }
+        }
+      }
+    },
+    "/document-management/document/global-search" : {
+      "post" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "Global Search for document",
+        "operationId" : "documentSearch",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Search"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/DocumentFileResponse"
+            }
+          }
+        }
+      }
+    },
+    "/document-management/document/file-keys/override/{clientLayout}" : {
+      "get" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "Get all File keys for an action and type filter.",
+        "operationId" : "getFileKeys",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Array of file keys inside data.",
+            "schema" : {
+              "$ref" : "#/definitions/FileKeysResponse"
+            }
+          },
+          "400" : {
+            "description" : "Status 400",
+            "schema" : {
+              "$ref" : "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "clientLayout",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/document-management/document/history-search" : {
+      "post" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "Get document History",
+        "operationId" : "documentSearch",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/History Search"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/DocumentFileResponse"
+            }
+          }
+        }
+      }
+    },
+    "/document-management/document/file-keys/{clientLayout}" : {
+      "get" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "Get all File keys for an action and type filter.",
+        "operationId" : "getFileKeys",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Array of file keys inside data.",
+            "schema" : {
+              "$ref" : "#/definitions/FileKeysResponse"
+            }
+          },
+          "400" : {
+            "description" : "Status 400",
+            "schema" : {
+              "$ref" : "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "clientLayout",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/document-management/document/document-copy-pdf/{documentKey}/{copyNumber}" : {
+      "get" : {
+        "tags" : [ "Document Manager" ],
+        "summary" : "Get PDF file for a doc copy",
+        "operationId" : "copy",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "documentKey",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "copyNumber",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/error-management/error/{errId}/info" : {
+      "get" : {
+        "tags" : [ "ErrorManager" ],
+        "summary" : "Get error info by id",
+        "operationId" : "errGetDetailListById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "order",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/ErrorsDetailInfoListResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "errId",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/error-management/error/{errId}" : {
+      "get" : {
+        "tags" : [ "ErrorManager" ],
+        "summary" : "Get error by id",
+        "operationId" : "errGetById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/ErrorsDetailResponse"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "ErrorManager" ],
+        "summary" : "Put error status by id",
+        "operationId" : "errPutById",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ErrorsDetailPut"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "errId",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/error-management/errors" : {
+      "get" : {
+        "tags" : [ "ErrorManager" ],
+        "summary" : "Get all errors",
+        "operationId" : "errGet",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "sort",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "description" : "by all field names",
+          "x-example" : "errId"
+        }, {
+          "name" : "order",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "x-example" : "asc"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32",
+          "x-example" : 0
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32",
+          "x-example" : 50
+        }, {
+          "name" : "errStatus",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "x-example" : "resolved"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/ErrorsResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/error-management/reprocess/" : {
+      "post" : {
+        "summary" : "Reprocess an error",
+        "operationId" : "errPostProcess",
+        "consumes" : [ ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ErrorReprocess"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success"
+          }
+        }
+      }
+    },
+    "/error-management/error/{errId}/status" : {
+      "get" : {
+        "tags" : [ "ErrorManager" ],
+        "summary" : "Get status of an error",
+        "description" : "to get status of an error",
+        "operationId" : "errGetStatus",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "required" : [ "statusCode", "statusDesc" ],
+                "type" : "object",
+                "properties" : {
+                  "statusCode" : {
+                    "type" : "string",
+                    "description" : "12/B0/...etc"
+                  },
+                  "statusDesc" : {
+                    "type" : "string",
+                    "description" : "Auto Hold....etc"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "errId",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/error-management/errors/{manager}/{managerKey}" : {
+      "get" : {
+        "tags" : [ "ErrorManager" ],
+        "summary" : "get error id by document/file key",
+        "operationId" : "getErrIdByKey",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/ErrorIdResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "manager",
+        "in" : "path",
+        "required" : true,
+        "type" : "string",
+        "x-example" : "fileReceipts"
+      }, {
+        "name" : "managerKey",
+        "in" : "path",
+        "required" : true,
+        "type" : "string",
+        "description" : "Integer or Integer+String",
+        "x-example" : "70126789312054321CC"
+      } ]
+    },
+    "/file-receipt-tracking/FileReceipts/{key}/download/original" : {
+      "get" : {
+        "tags" : [ "FileReceiptsManager" ],
+        "description" : "Returns file receipts data to the caller",
+        "operationId" : "original",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "key",
+        "in" : "path",
+        "required" : true,
+        "type" : "string",
+        "description" : "file key"
+      } ]
+    },
+    "/file-receipt-tracking/FileReceipts/{key}/resend" : {
+      "get" : {
+        "tags" : [ "FileReceiptsManager" ],
+        "description" : "Returns file receipts data to the caller",
+        "operationId" : "resend",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "key",
+        "in" : "path",
+        "required" : true,
+        "type" : "string",
+        "description" : "file key"
+      } ]
+    },
+    "/file-receipt-tracking/FileReceipts/{key}/download/check-register" : {
+      "get" : {
+        "tags" : [ "FileReceiptsManager" ],
+        "description" : "Returns file receipts data to the caller",
+        "operationId" : "check",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "key",
+        "in" : "path",
+        "required" : true,
+        "type" : "string",
+        "description" : "file key"
+      } ]
+    },
+    "/file-receipt-tracking/FileReceipts/{key}/download/abf-formatted" : {
+      "get" : {
+        "tags" : [ "FileReceiptsManager" ],
+        "description" : "Returns file receipts data to the caller",
+        "operationId" : "abf",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "key",
+        "in" : "path",
+        "required" : true,
+        "type" : "string",
+        "description" : "file key"
+      } ]
+    },
+    "/file-receipt-tracking/FileReceipts/{key}" : {
+      "get" : {
+        "tags" : [ "FileReceiptsManager" ],
+        "description" : "Returns file receipts data to the caller",
+        "operationId" : "key",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "key",
+        "in" : "path",
+        "required" : true,
+        "type" : "string",
+        "description" : "file key"
+      } ]
+    },
+    "/file-receipt-tracking/FileReceipts" : {
+      "get" : {
+        "tags" : [ "FileReceiptsManager" ],
+        "description" : "Returns file receipts data to the caller",
+        "operationId" : "getFileReceipts",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "sort",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "description" : "sort"
+        }, {
+          "name" : "order",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "description" : "order"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : false,
+          "type" : "number",
+          "format" : "double",
+          "description" : "offset"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "type" : "number",
+          "format" : "double",
+          "description" : "limit"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      }
+    },
+    "/report-manager/reports/userreport" : {
+      "post" : {
+        "tags" : [ "ReportManager" ],
+        "summary" : "Get the user report",
+        "operationId" : "userReport",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "object",
+            "required" : [ "cwID", "reportType", "sortBy", "sortOrder" ],
+            "properties" : {
+              "reportType" : {
+                "type" : "string",
+                "description" : "View On Screen/Download Microsoft Excel"
+              },
+              "cwID" : {
+                "type" : "number"
+              },
+              "sortOrder" : {
+                "type" : "string",
+                "description" : "Ascending/Descending"
+              },
+              "sortBy" : {
+                "type" : "string",
+                "description" : "User ID/User Name/Last Logged In"
+              }
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/UserReportResponse"
+            }
+          }
+        }
+      }
+    },
+    "/reporting/on-hold-report" : { },
+    "/reporting/client-information-report" : {
+      "get" : {
+        "tags" : [ "ReportManager" ],
+        "summary" : "Get client information report",
+        "operationId" : "clientInfoReport",
+        "parameters" : [ {
+          "name" : "context",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "layoutId",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      }
+    },
+    "/reporting/client-image-report" : {
+      "get" : {
+        "tags" : [ "ReportManager" ],
+        "operationId" : "clientImageReport",
+        "produces" : [ "application/pdf" ],
+        "parameters" : [ {
+          "name" : "env",
+          "in" : "query",
+          "required" : true,
+          "type" : "string",
+          "description" : "test/production"
+        }, {
+          "name" : "clientId",
+          "in" : "query",
+          "required" : true,
+          "type" : "string",
+          "description" : "0002"
+        }, {
+          "name" : "layoutId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "description" : "028"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      }
+    },
+    "/on-hold-report/reports/onholdreport" : {
+      "post" : {
+        "tags" : [ "ReportManager" ],
+        "operationId" : "onHoldReport",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/OnHoldReportPost"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      }
+    },
+    "/security-manager/users/{uid}/terminate" : {
+      "delete" : {
+        "tags" : [ "SecurityManager" ],
+        "summary" : "Terminate the user session",
+        "operationId" : "termUser",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "uid",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/security-manager/users/{uid}/resetPwd" : {
+      "get" : {
+        "tags" : [ "SecurityManager" ],
+        "description" : "to reset the user password",
+        "operationId" : "resetPwd",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "uid",
+        "in" : "path",
+        "required" : true,
+        "type" : "string",
+        "description" : "user id"
+      } ]
+    },
+    "/security-manager/users/{uid}" : {
+      "get" : {
+        "tags" : [ "SecurityManager" ],
+        "description" : "to get a specific user data",
+        "operationId" : "user",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "SecurityManager" ],
+        "summary" : "modify a user",
+        "operationId" : "modifyUser",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UserProperty"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "uid",
+        "in" : "path",
+        "required" : true,
+        "type" : "string",
+        "description" : "user id"
+      } ]
+    },
+    "/security-manager/users" : {
+      "get" : {
+        "tags" : [ "SecurityManager" ],
+        "summary" : "Get all users",
+        "description" : "to get all users",
+        "operationId" : "users",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "sort",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "order",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "online",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "SecurityManager" ],
+        "summary" : "add a user",
+        "operationId" : "addUser",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UserProperty"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      }
+    },
+    "/security-manager/roles" : {
+      "get" : {
+        "tags" : [ "SecurityManager" ],
+        "summary" : "Get all roles",
+        "description" : "to get all roles",
+        "operationId" : "roles",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/role"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "SecurityManager" ],
+        "summary" : "add roles",
+        "operationId" : "addRole",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "object",
+            "properties" : {
+              "data" : {
+                "$ref" : "#/definitions/postRole"
+              }
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "SecurityManager" ],
+        "summary" : "Delete Roles",
+        "operationId" : "delRole",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      }
+    },
+    "/security-manager/dataSources" : {
+      "get" : {
+        "tags" : [ "SecurityManager" ],
+        "summary" : "Get all data sources",
+        "description" : "to get all data sources",
+        "operationId" : "dataSources",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/dataSource"
+            }
+          }
+        }
+      }
+    },
+    "/security-manager/users/ucws/{uid}" : {
+      "get" : {
+        "tags" : [ "SecurityManager" ],
+        "summary" : "Get a List of UCW/Role Mapping for a User",
+        "description" : "Get a List of UCW/Role Mapping for a User",
+        "operationId" : "getContextRoles",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/ucwAssociation"
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "SecurityManager" ],
+        "summary" : "Assign user to a context",
+        "operationId" : "assignRoles",
+        "consumes" : [ ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "object",
+            "required" : [ "add", "deleteUcwRoles", "deleteUcws" ],
+            "properties" : {
+              "add" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/definitions/ucwAddRole"
+                }
+              },
+              "deleteUcwRoles" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/definitions/ucwDeleteRole"
+                }
+              },
+              "deleteUcws" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/definitions/ucwDeleteRole"
+                }
+              }
+            }
+          },
+          "x-examples" : {
+            "application/json" : "\"\\\"{\\\\n  delete: [\\\\n    {\\\\n      userId: \\\\\\\"1\\\\\\\",\\\\n      ucwId: \\\\\\\"2\\\\\\\",\\\\n      roles: [\\\\\\\"1\\\\\\\",\\\\\\\"2\\\\\\\"]\\\\n    },\\\\n    {\\\\n      userId: '1',\\\\n      ucwId: '3',\\\\n      roles: [\\\\\\\"1\\\\\\\", \\\\\\\"4\\\\\\\"]\\\\n    }],\\\\n    add: [\\\\n    {\\\\n      userId: \\\\\\\"1\\\\\\\",\\\\n      ucwId: \\\\\\\"2\\\\\\\",\\\\n      roles: [\\\\\\\"1\\\\\\\",\\\\\\\"2\\\\\\\"]\\\\n    },\\\\n    {\\\\n      userId: '1',\\\\n      ucwId: '3',\\\\n      roles: [\\\\\\\"1\\\\\\\", \\\\\\\"4\\\\\\\"]\\\\n    }]\\\\n}\\\"\""
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "uid",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/security-manager/roles/{roleId}" : {
+      "get" : {
+        "tags" : [ "SecurityManager" ],
+        "summary" : "Get single role",
+        "description" : "to get single role",
+        "operationId" : "roleById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "SecurityManager" ],
+        "summary" : "modify a role",
+        "operationId" : "putRole",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "object"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "roleId",
+        "in" : "path",
+        "required" : true,
+        "type" : "integer"
+      } ]
+    },
+    "/security-manager/permissions" : {
+      "get" : {
+        "tags" : [ "SecurityManager" ],
+        "operationId" : "permissions",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "order",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      }
+    },
+    "/SharedDocument/document/upload" : {
+      "post" : {
+        "tags" : [ "SharedDocumentManager" ],
+        "summary" : "",
+        "operationId" : "sharedDocUpload",
+        "consumes" : [ "multipart/form-data" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "file",
+          "in" : "formData",
+          "required" : true,
+          "type" : "file",
+          "description" : "The uploaded file data"
+        }, {
+          "name" : "fileDesc",
+          "in" : "formData",
+          "required" : true,
+          "type" : "string",
+          "description" : "The uploaded file description"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      }
+    },
+    "/SharedDocument/document/download/{fileUID}" : {
+      "get" : {
+        "tags" : [ "SharedDocumentManager" ],
+        "description" : "shared documents list",
+        "operationId" : "sharedDocDL",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "fileUID",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/SharedDocument/document/delete" : {
+      "delete" : {
+        "tags" : [ "SharedDocumentManager" ],
+        "description" : "shared documents delete",
+        "operationId" : "sharedDocDel",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      }
+    },
+    "/SharedDocument/document" : {
+      "get" : {
+        "tags" : [ "SharedDocumentManager" ],
+        "description" : "shared documents list",
+        "operationId" : "sharedDocGet",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      }
+    },
+    "/testfile-manager/files" : {
+      "get" : {
+        "tags" : [ "TestFileManager" ],
+        "summary" : "Get all test files",
+        "description" : " ",
+        "operationId" : "getTestFiles",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/TestFile"
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "TestFileManager" ],
+        "summary" : "Add a test file",
+        "description" : "",
+        "operationId" : "uploadFile",
+        "consumes" : [ "multipart/form-data" ],
+        "parameters" : [ {
+          "name" : "file",
+          "in" : "formData",
+          "required" : false,
+          "type" : "file",
+          "description" : "The uploaded file data"
+        }, {
+          "name" : "email",
+          "in" : "formData",
+          "required" : true,
+          "type" : "string",
+          "description" : "email"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/TestFile"
+            }
+          }
+        }
+      }
+    },
+    "/testfile-manager/files/{fileKey}" : {
+      "get" : {
+        "tags" : [ "TestFileManager" ],
+        "summary" : "Get the detail info by a file key",
+        "description" : "",
+        "operationId" : "getTestFileByKey",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/TestFile"
+            }
+          }
+        }
+      },
+      "put" : {
+        "summary" : "Update the access level",
+        "operationId" : "updateAccessLevel",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "object",
+            "properties" : {
+              "internal" : {
+                "type" : "boolean"
+              }
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/TestFile"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "fileKey",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/testfile-manager/files/{fileKey}/resubmit" : {
+      "get" : {
+        "tags" : [ "TestFileManager" ],
+        "summary" : "To resubmit by a file key",
+        "description" : "",
+        "operationId" : "resubmit",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/TestFile"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "fileKey",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/testfile-manager/download/{type}/{id}" : {
+      "get" : {
+        "tags" : [ "TestFileManager" ],
+        "summary" : "Download output file",
+        "description" : "Download test file output",
+        "operationId" : "downloadFile",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "type",
+        "in" : "path",
+        "required" : true,
+        "type" : "string",
+        "description" : "'pdf' or 'xml'"
+      }, {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string",
+        "description" : "'pdfId' or 'xmlId'"
+      } ]
+    },
+    "/system-values-retrieval/system/all/" : {
+      "get" : {
+        "tags" : [ "System Values" ],
+        "summary" : "Get All Static Data Values",
+        "operationId" : "getSysValues",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/SystemValuesResponse"
+            }
+          }
+        }
+      }
+    },
+    "/client-values-retrieval/client/client-address/{clientLayout}" : {
+      "get" : {
+        "tags" : [ "Client Address Values" ],
+        "summary" : "Get All Static Data Values",
+        "operationId" : "getAddresses",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "addressType",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "activeFlag",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/AddressesResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "clientLayout",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/client-values-retrieval/client/all/{clientLayout}" : {
+      "get" : {
+        "tags" : [ "Client Values" ],
+        "summary" : "Get All Static Data Values",
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/SystemValuesResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "clientLayout",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/message/login-messages/{clientLayout}/{userType}" : {
+      "get" : {
+        "tags" : [ "Message Manager" ],
+        "summary" : "Get all list of messages",
+        "operationId" : "getMessages",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/MessageResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "clientLayout",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "userType",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/group-rule/rules/commit/multi" : {
+      "post" : {
+        "tags" : [ "GroupRuleManager" ],
+        "operationId" : "commitRules",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "object",
+            "properties" : {
+              "fields" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "object",
+                  "properties" : {
+                    "ruleID" : {
+                      "type" : "string"
+                    },
+                    "ruleVersion" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      }
+    },
+    "/group-rule/rules/commit/{ruleID}" : {
+      "post" : {
+        "tags" : [ "GroupRuleManager" ],
+        "operationId" : "commitRule",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "object",
+            "properties" : {
+              "ruleVersion" : {
+                "type" : "string"
+              }
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "ruleID",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/group-rule/rules/clone/{ruleID}/{status}" : {
+      "post" : {
+        "tags" : [ "GroupRuleManager" ],
+        "operationId" : "copyRule",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "ruleID",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "status",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/group-rule/rules/ruleType/{type}" : {
+      "get" : {
+        "tags" : [ "GroupRuleManager" ],
+        "operationId" : "getRulesByType",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "type",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/group-rule/rules/{ruleID}/{status}/details" : {
+      "get" : {
+        "tags" : [ "GroupRuleManager" ],
+        "operationId" : "getDetailRecords",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "ruleID",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "status",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/group-rule/rules/{ruleID}/details" : {
+      "post" : {
+        "tags" : [ "GroupRuleManager" ],
+        "operationId" : "addRuleDetails",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "object",
+            "properties" : {
+              "claimType" : {
+                "type" : "string"
+              },
+              "recipientType" : {
+                "type" : "string"
+              },
+              "documentType" : {
+                "type" : "string"
+              },
+              "copyNumber" : {
+                "type" : "string"
+              },
+              "taxIdSSN" : {
+                "type" : "string"
+              },
+              "ssn" : {
+                "type" : "string"
+              },
+              "insuredEligibility" : {
+                "type" : "string"
+              },
+              "copyFlag" : {
+                "type" : "string"
+              },
+              "abfFormID" : {
+                "type" : "string"
+              },
+              "recipientStatus" : {
+                "type" : "string"
+              },
+              "ppoCount" : {
+                "type" : "string"
+              },
+              "messageCode" : {
+                "type" : "string"
+              },
+              "hppID" : {
+                "type" : "string"
+              },
+              "checkAmount" : {
+                "type" : "string"
+              },
+              "insertCode" : {
+                "type" : "string"
+              },
+              "state" : {
+                "type" : "string"
+              },
+              "customRoute" : {
+                "type" : "string"
+              },
+              "plcntnType" : {
+                "type" : "string"
+              },
+              "languageCode" : {
+                "type" : "string"
+              },
+              "jsonPayload" : {
+                "type" : "string"
+              },
+              "createdByID" : {
+                "type" : "string"
+              },
+              "createdDate" : {
+                "type" : "number"
+              },
+              "modifiedByID" : {
+                "type" : "string"
+              },
+              "modifiedDate" : {
+                "type" : "number"
+              }
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "GroupRuleManager" ],
+        "operationId" : "modifyDetailRecord",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "detailIDs" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "GroupRuleManager" ],
+        "operationId" : "deleteDetailRecord",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "ruleID",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/group-rule/rules/{ruleID}" : {
+      "get" : {
+        "tags" : [ "GroupRuleManager" ],
+        "operationId" : "getRule",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "GroupRuleManager" ],
+        "operationId" : "createTestRule",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "GroupRuleManager" ],
+        "operationId" : "editRule",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "object",
+            "properties" : {
+              "isActive" : {
+                "type" : "string"
+              },
+              "ruleStatus" : {
+                "type" : "string"
+              },
+              "ruleDesc" : {
+                "type" : "string"
+              }
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "ruleID",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/group-rule/rules" : {
+      "get" : {
+        "tags" : [ "GroupRuleManager" ],
+        "operationId" : "getRules",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "GroupRuleManager" ],
+        "operationId" : "addRule",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "object",
+            "properties" : {
+              "ruleDesc" : {
+                "type" : "string"
+              },
+              "ruleTypeID" : {
+                "type" : "string"
+              },
+              "clientID" : {
+                "type" : "number"
+              }
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      }
+    },
+    "/group-rule/rules/ruleTypes/{clientLayout}" : {
+      "get" : {
+        "tags" : [ "EmployerGroupManager" ],
+        "summary" : "Get All RuleTypes for a given ClientLayout",
+        "operationId" : "getRuleTypesByClientLayout",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "type" : "object"
+              }
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "clientLayout",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/group-rule/rules/getGroupAssociations/{ruleId}" : {
+      "get" : {
+        "tags" : [ "GroupRuleManager" ],
+        "summary" : "Get all Group Association Data for a Rule",
+        "operationId" : "getGroupAssociationsByRule",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/RuleAssociationsResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "ruleId",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/group-rule/group" : {
+      "post" : {
+        "tags" : [ "EmployerGroupManager" ],
+        "summary" : "add a new EmployerGroup",
+        "operationId" : "egPostAdd",
+        "consumes" : [ ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/EmployerGroupPost"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "EmployerGroupManager" ],
+        "summary" : "Modify Groups (Activate/Deactivate all)",
+        "description" : "Used to activate/deactive a set of groups in one API call.  Could be extended for other bulk uses in future.",
+        "operationId" : "egPutAll",
+        "consumes" : [ ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/EGPutStatus"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200"
+          }
+        }
+      }
+    },
+    "/group-rule/group/getGroupRuleAssociation/{groupId}" : {
+      "get" : {
+        "tags" : [ "GroupRuleManager" ],
+        "summary" : "Get Group Group Rule Associations",
+        "description" : "Get Group Group Rule Associations",
+        "operationId" : "getGroupAssociations",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/GroupAssociationsResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "groupId",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/group-rule/group/clientId/{clientID}" : {
+      "get" : {
+        "tags" : [ "GroupRuleManager" ],
+        "summary" : "Get All Groups by a Client Layout",
+        "operationId" : "getGroups",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/EmployerGroupSingle"
+              }
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "clientID",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/group-rule/group/{groupId}" : {
+      "get" : {
+        "tags" : [ "EmployerGroupManager" ],
+        "summary" : "get single EmployerGroup",
+        "operationId" : "egGetOne",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/EmployerGroupSingle"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "EmployerGroupManager" ],
+        "summary" : "modify an EmployerGroup",
+        "operationId" : "egPut",
+        "consumes" : [ ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/EmployerGroupSingle"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "groupId",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/group-rule/group/getGroupRuleAssociation" : {
+      "post" : {
+        "tags" : [ "GroupRuleManager" ],
+        "summary" : "Get Bulk Group Group Rule Associations",
+        "description" : "Get All Group Group Rule Associations",
+        "operationId" : "getGroupsAssociations",
+        "consumes" : [ ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "array",
+            "description" : "Provide Array of groupIds.",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "x-examples" : {
+            "application/json" : "[\"1111\". \"2222\", \"3333\"]"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/GroupAssociationsResponse"
+            }
+          }
+        }
+      }
+    },
+    "/group-rule/group/groupRuleAssociation/{groupId}/{ruleId}" : {
+      "post" : {
+        "tags" : [ "GroupRuleManager" ],
+        "summary" : "Create Rule Association",
+        "description" : "Create association",
+        "operationId" : "createRuleAssociation",
+        "consumes" : [ ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "object",
+            "required" : [ "ruleStatus" ],
+            "properties" : {
+              "ruleStatus" : {
+                "type" : "string"
+              }
+            },
+            "description" : "pass the ruleStatus"
+          },
+          "x-examples" : {
+            "application/json" : "{\n\"ruleStatus\":\"T\"\n}"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "groupId",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "ruleId",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/group-rule/group/modifyGroupRuleAssociation" : {
+      "post" : {
+        "tags" : [ "GroupRuleManager" ],
+        "summary" : "Update Rule Association",
+        "description" : "Update association",
+        "operationId" : "updateRuleAssociation",
+        "consumes" : [ ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "object",
+            "required" : [ "addOrUpdateAssociation", "deleteAssociation" ],
+            "properties" : {
+              "addOrUpdateAssociation" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/definitions/associationDetail"
+                }
+              },
+              "deleteAssociation" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/definitions/associationDetail"
+                }
+              }
+            }
+          },
+          "x-examples" : {
+            "application/json" : "old one : { \"groupRuleAssociation\":\n[\n{\n\"groupId\": \"211\",\n\"ruleId\": \"1357\",\n\"ruleType\": \"CDM\",\n},\n{\n\"groupId\": \"212\",\n\"ruleId\": \"1379\",\n\"ruleType\": \"PAR\",\n}\n]\n}"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      }
+    },
+    "/group-rule/group/commitGroupRuleAssociation" : {
+      "post" : {
+        "tags" : [ "GroupRuleManager" ],
+        "summary" : "Commit Rule Association",
+        "description" : "Commit association",
+        "operationId" : "updateRuleAssociation",
+        "consumes" : [ ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "object",
+            "required" : [ "commitGroupRuleAssociation" ],
+            "properties" : {
+              "commitGroupRuleAssociation" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/definitions/associationDetail"
+                }
+              }
+            }
+          },
+          "x-examples" : {
+            "application/json" : "old one: { \"commitGroupRuleAssociation\":\n[\n{\n\"groupId\": \"211\",\n\"ruleId\": \"1357\",\n\"ruleType\":\"CDM\",\n\"groupRuleMapStatus\": \"L\"\n},\n{\n\"groupId\": \"212\",\n\"ruleId\": \"1379\",\n\"ruleType\":\"PAR\",\n\"groupRuleMapStatus\": \"L\"\n}\n]\n}"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/StandardResponse"
+            }
+          }
+        }
+      }
+    },
+    "/group-rule/group/getGroups/ruleAssociations/{ruleId}" : {
+      "get" : {
+        "tags" : [ "GroupRuleManager" ],
+        "summary" : "Get All Groups by a Client Layout",
+        "operationId" : "getGroupsRuleAssociation",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/EmployerGroupSingle"
+              }
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "ruleId",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/swagger" : { }
+  },
+  "definitions" : {
+    "Auth Token Response" : {
+      "type" : "object",
+      "required" : [ "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object"
+          }
+        },
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Token"
+          }
+        }
+      }
+    },
+    "Context/Profile Data" : {
+      "type" : "object",
+      "required" : [ "profile" ],
+      "properties" : {
+        "profile" : {
+          "required" : [ "email", "firstName", "lastName", "userName", "userType" ],
+          "type" : "object",
+          "properties" : {
+            "userName" : {
+              "type" : "string"
+            },
+            "userType" : {
+              "type" : "string",
+              "description" : "Internal or External"
+            },
+            "firstName" : {
+              "type" : "string"
+            },
+            "lastName" : {
+              "type" : "string"
+            },
+            "email" : {
+              "type" : "string"
+            },
+            "company" : {
+              "type" : "string",
+              "description" : "Ex: Change Healthcare"
+            }
+          }
+        },
+        "ucws" : {
+          "type" : "array",
+          "items" : {
+            "required" : [ "clientLayoutId", "clientLayoutName", "cwId", "roleIds", "ucwId", "webGroupId", "webGroupName" ],
+            "type" : "object",
+            "properties" : {
+              "ucwId" : {
+                "type" : "number"
+              },
+              "clientLayoutId" : {
+                "type" : "string"
+              },
+              "clientLayoutName" : {
+                "type" : "string"
+              },
+              "webGroupId" : {
+                "type" : "string"
+              },
+              "webGroupName" : {
+                "type" : "string"
+              },
+              "roleIds" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "number"
+                }
+              },
+              "cwId" : {
+                "type" : "number"
+              }
+            }
+          }
+        },
+        "rolePermissions" : {
+          "type" : "array",
+          "items" : {
+            "required" : [ "roleId", "roleName" ],
+            "type" : "object",
+            "properties" : {
+              "roleId" : {
+                "type" : "number"
+              },
+              "roleName" : {
+                "type" : "string"
+              },
+              "permissions" : {
+                "type" : "array",
+                "items" : {
+                  "required" : [ "permissionDescription", "permissionId", "permissionName" ],
+                  "type" : "object",
+                  "properties" : {
+                    "permissionId" : {
+                      "type" : "number"
+                    },
+                    "permissionName" : {
+                      "type" : "string"
+                    },
+                    "permissionDescription" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Logout Response" : {
+      "type" : "object",
+      "required" : [ "data", "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object"
+          }
+        },
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "Context Response" : {
+      "type" : "object",
+      "required" : [ "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object"
+          }
+        },
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Context/Profile Data"
+          }
+        }
+      }
+    },
+    "Token" : {
+      "type" : "object",
+      "required" : [ "access_token", "expires_in", "jti", "scope", "token_type" ],
+      "properties" : {
+        "access_token" : {
+          "type" : "string",
+          "description" : "Unique Access Token"
+        },
+        "token_type" : {
+          "type" : "string",
+          "description" : "bearer"
+        },
+        "expires_in" : {
+          "type" : "string",
+          "description" : "time for token to expire"
+        },
+        "scope" : {
+          "type" : "string",
+          "description" : "read"
+        },
+        "jti" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AddressResponse" : {
+      "type" : "object",
+      "required" : [ "data", "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data" : {
+          "type" : "array",
+          "description" : "Will only be one.",
+          "items" : {
+            "$ref" : "#/definitions/Address"
+          }
+        }
+      }
+    },
+    "Address" : {
+      "type" : "object",
+      "properties" : {
+        "addressId" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "address1" : {
+          "type" : "string"
+        },
+        "address2" : {
+          "type" : "string"
+        },
+        "address3" : {
+          "type" : "string"
+        },
+        "zip" : {
+          "type" : "string"
+        },
+        "state" : {
+          "type" : "string"
+        },
+        "country" : {
+          "type" : "string"
+        },
+        "city" : {
+          "type" : "string"
+        },
+        "attention" : {
+          "type" : "string"
+        },
+        "deliveryType" : {
+          "type" : "string"
+        },
+        "sortOrder" : {
+          "type" : "string"
+        },
+        "addressType" : {
+          "type" : "string",
+          "description" : "Determines if it is a delivery address or return address."
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "modifiedDate" : {
+          "type" : "string"
+        },
+        "addressStatus" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "returnPhone" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AddressesList" : {
+      "type" : "object",
+      "required" : [ "addressId" ],
+      "properties" : {
+        "addressId" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "address1" : {
+          "type" : "string"
+        },
+        "address2" : {
+          "type" : "string"
+        },
+        "zip" : {
+          "type" : "string"
+        },
+        "state" : {
+          "type" : "string"
+        },
+        "city" : {
+          "type" : "string"
+        },
+        "attention" : {
+          "type" : "string"
+        },
+        "deliveryType" : {
+          "type" : "string"
+        },
+        "sortOrder" : {
+          "type" : "string"
+        },
+        "addressType" : {
+          "type" : "string",
+          "description" : "Determines if it is a delivery address or return address."
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "modifiedDate" : {
+          "type" : "string"
+        },
+        "addressStatus" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AddressesResponse" : {
+      "type" : "object",
+      "required" : [ "data", "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data" : {
+          "type" : "array",
+          "description" : "List of address.",
+          "items" : {
+            "$ref" : "#/definitions/AddressesList"
+          }
+        }
+      }
+    },
+    "AddressPostProperty" : {
+      "type" : "object",
+      "properties" : {
+        "Desc" : {
+          "type" : "string"
+        },
+        "City" : {
+          "type" : "string"
+        },
+        "State" : {
+          "type" : "string"
+        },
+        "Zip" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AddressPutProperty" : {
+      "type" : "object",
+      "properties" : {
+        "Desc" : {
+          "type" : "string"
+        },
+        "City" : {
+          "type" : "string"
+        },
+        "State" : {
+          "type" : "string"
+        },
+        "Zip" : {
+          "type" : "string"
+        }
+      }
+    },
+    "TranslationGetAll" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/TranslationsGetOne"
+      }
+    },
+    "TranslationsGetOne" : {
+      "type" : "object",
+      "required" : [ "normalizedTranslationType", "translationType", "translationTypeDesc", "translationTypeId", "translationTypeStatus" ],
+      "properties" : {
+        "translationTypeId" : {
+          "type" : "integer"
+        },
+        "translationType" : {
+          "type" : "string"
+        },
+        "normalizedTranslationType" : {
+          "type" : "string"
+        },
+        "translationTypeDesc" : {
+          "type" : "string"
+        },
+        "translationTypeStatus" : {
+          "type" : "string"
+        }
+      }
+    },
+    "TranslationPostPut" : {
+      "type" : "object",
+      "required" : [ "normalizedTranslationType", "translationType", "translationTypeDesc", "translationTypeStatus" ],
+      "properties" : {
+        "translationType" : {
+          "type" : "string"
+        },
+        "normalizedTranslationType" : {
+          "type" : "string"
+        },
+        "translationTypeDesc" : {
+          "type" : "string"
+        },
+        "translationTypeStatus" : {
+          "type" : "string"
+        }
+      }
+    },
+    "TranslationTypeOptions" : {
+      "type" : "object",
+      "required" : [ "normalizedTypeCode", "normalizedTypeDesc", "normalizedTypeId" ],
+      "properties" : {
+        "normalizedTypeId" : {
+          "type" : "integer"
+        },
+        "normalizedTypeCode" : {
+          "type" : "string",
+          "description" : "00/AB"
+        },
+        "normalizedTypeDesc" : {
+          "type" : "string"
+        }
+      }
+    },
+    "TranslationClientTypeOptions" : {
+      "type" : "object",
+      "required" : [ "clientTypeCode", "clientTypeId" ],
+      "properties" : {
+        "clientTypeId" : {
+          "type" : "integer"
+        },
+        "clientTypeCode" : {
+          "type" : "string",
+          "description" : "001"
+        }
+      }
+    },
+    "AddressExclusion" : {
+      "type" : "object",
+      "required" : [ "addr1", "addr2", "city", "desc", "name", "state", "targets", "zip" ],
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "desc" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "addr1" : {
+          "type" : "string"
+        },
+        "addr2" : {
+          "type" : "string"
+        },
+        "city" : {
+          "type" : "string"
+        },
+        "state" : {
+          "type" : "string"
+        },
+        "zip" : {
+          "type" : "string"
+        },
+        "country" : {
+          "type" : "string"
+        },
+        "targets" : {
+          "type" : "array",
+          "description" : "['ACE', 'TWE', 'GSA', 'OIG']",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "postSettingsGroupRules" : {
+      "type" : "array",
+      "items" : {
+        "required" : [ "reprocess", "ruleTypeDesc", "ruleTypeId", "value" ],
+        "type" : "object",
+        "properties" : {
+          "ruleTypeId" : {
+            "type" : "string"
+          },
+          "ruleTypeDesc" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
+          },
+          "reprocess" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "getSettingsGroupRules" : {
+      "type" : "array",
+      "items" : {
+        "required" : [ "reprocess", "ruleTypeDesc", "ruleTypeId", "value" ],
+        "type" : "object",
+        "properties" : {
+          "ruleTypeId" : {
+            "type" : "string"
+          },
+          "ruleTypeDesc" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
+          },
+          "reprocess" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "getClientDropdowns" : {
+      "type" : "object",
+      "required" : [ "keyId", "options" ],
+      "properties" : {
+        "keyId" : {
+          "type" : "string"
+        },
+        "options" : {
+          "type" : "array",
+          "items" : {
+            "required" : [ "key", "value" ],
+            "type" : "object",
+            "properties" : {
+              "key" : {
+                "type" : "string"
+              },
+              "value" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ClientSaved" : {
+      "type" : "object",
+      "required" : [ "keyId", "value" ],
+      "properties" : {
+        "keyId" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "string"
+        }
+      }
+    },
+    "TrackingDetailsResponse" : {
+      "type" : "object",
+      "required" : [ "data", "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TrackingDetails"
+          }
+        }
+      }
+    },
+    "TrackingDetails" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "description" : "Could be data processing / doc management"
+        },
+        "facility" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "datetime" : {
+          "type" : "string"
+        }
+      }
+    },
+    "CopyInfoResponse" : {
+      "type" : "object",
+      "required" : [ "data", "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CopyInformation"
+          }
+        }
+      }
+    },
+    "CopyInformationDetails" : {
+      "type" : "object",
+      "properties" : {
+        "stock" : {
+          "type" : "string"
+        },
+        "jobId" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "envelope" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "page" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "facility" : {
+          "type" : "string"
+        },
+        "mailDate" : {
+          "type" : "string"
+        },
+        "deliveryType" : {
+          "type" : "string"
+        },
+        "eEOBMail" : {
+          "type" : "string"
+        }
+      }
+    },
+    "CopyInformation" : {
+      "type" : "object",
+      "required" : [ "copyId", "copyNumber" ],
+      "properties" : {
+        "copyNumber" : {
+          "type" : "string"
+        },
+        "details" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CopyInformationDetails"
+          }
+        },
+        "copyId" : {
+          "type" : "string"
+        }
+      }
+    },
+    "DeliveryInfoResponse" : {
+      "type" : "object",
+      "required" : [ "data", "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/DeliveryInfoHistory"
+          }
+        }
+      }
+    },
+    "DeliveryInfoHistory" : {
+      "type" : "object",
+      "properties" : {
+        "current" : {
+          "$ref" : "#/definitions/Address"
+        },
+        "previous" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Address"
+          }
+        }
+      }
+    },
+    "Transaction History" : {
+      "type" : "object",
+      "required" : [ "lastHoldDate", "lastHoldId", "lastHoldUser" ],
+      "properties" : {
+        "lastHoldId" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Last hold transaction ID."
+        },
+        "lastHoldUser" : {
+          "type" : "string",
+          "description" : "User name"
+        },
+        "lastHoldDate" : {
+          "type" : "string",
+          "description" : "Date time"
+        }
+      },
+      "description" : "Response containing previous hold transaction information"
+    },
+    "TransactionResponse" : {
+      "type" : "object",
+      "required" : [ "data", "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data" : {
+          "type" : "number",
+          "description" : "Will only be one."
+        }
+      }
+    },
+    "TransactionDetails" : {
+      "type" : "object",
+      "properties" : {
+        "transactionId" : {
+          "type" : "string"
+        }
+      }
+    },
+    "History Search" : {
+      "type" : "object",
+      "required" : [ "action", "clientLayout", "level" ],
+      "properties" : {
+        "action" : {
+          "type" : "string",
+          "description" : "Release, purge, route, hold"
+        },
+        "level" : {
+          "type" : "string",
+          "description" : "Document, Group, File, Auto"
+        },
+        "startDate" : {
+          "type" : "string"
+        },
+        "endDate" : {
+          "type" : "string"
+        },
+        "fileOrDocKey" : {
+          "type" : "string",
+          "description" : "This will send either a filekey or doc key and the history will have to search based on the level selected."
+        },
+        "collapseClaims" : {
+          "type" : "string"
+        },
+        "clientLayout" : {
+          "type" : "string"
+        }
+      },
+      "description" : "Search paramaters for history query."
+    },
+    "RouteDocumentPost" : {
+      "type" : "object",
+      "required" : [ "clientLayout", "deliveryInfo", "transactionDetails" ],
+      "properties" : {
+        "transactionDetails" : {
+          "type" : "array",
+          "description" : "list of documentIds to release",
+          "items" : {
+            "$ref" : "#/definitions/DocumentPost"
+          }
+        },
+        "deliveryInfo" : {
+          "$ref" : "#/definitions/DeliveryInfo"
+        },
+        "level" : {
+          "type" : "string"
+        },
+        "clientLayout" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ReleaseFilePost" : {
+      "type" : "object",
+      "required" : [ "level", "releaseType", "transactionDetails" ],
+      "properties" : {
+        "transactionDetails" : {
+          "type" : "array",
+          "description" : "list of fileKeys to release",
+          "items" : {
+            "$ref" : "#/definitions/FilePost"
+          }
+        },
+        "releaseType" : {
+          "type" : "string"
+        },
+        "level" : {
+          "type" : "string",
+          "description" : "group or file"
+        }
+      }
+    },
+    "RouteFilePost" : {
+      "type" : "object",
+      "required" : [ "deliveryInfo", "level", "transactionDetails" ],
+      "properties" : {
+        "transactionDetails" : {
+          "type" : "array",
+          "description" : "list of fileKeys to release",
+          "items" : {
+            "$ref" : "#/definitions/FilePost"
+          }
+        },
+        "deliveryInfo" : {
+          "$ref" : "#/definitions/DeliveryInfo"
+        },
+        "level" : {
+          "type" : "string",
+          "description" : "group or file"
+        }
+      }
+    },
+    "ReleaseDocumentPost" : {
+      "type" : "object",
+      "required" : [ "clientLayout", "releaseType", "transactionDetails" ],
+      "properties" : {
+        "transactionDetails" : {
+          "type" : "array",
+          "description" : "list of documents to release",
+          "items" : {
+            "$ref" : "#/definitions/DocumentPost"
+          }
+        },
+        "releaseType" : {
+          "type" : "string"
+        },
+        "level" : {
+          "type" : "string"
+        },
+        "clientLayout" : {
+          "type" : "string"
+        }
+      }
+    },
+    "HoldFilePost" : {
+      "type" : "object",
+      "required" : [ "level", "transactionDetails" ],
+      "properties" : {
+        "transactionDetails" : {
+          "type" : "array",
+          "description" : "list of fileKeys to release",
+          "items" : {
+            "$ref" : "#/definitions/FilePost"
+          }
+        },
+        "level" : {
+          "type" : "string",
+          "description" : "group or file"
+        }
+      }
+    },
+    "HoldDocumentPost" : {
+      "type" : "object",
+      "required" : [ "clientLayout", "transactionDetails" ],
+      "properties" : {
+        "transactionDetails" : {
+          "type" : "array",
+          "description" : "list of documents to release",
+          "items" : {
+            "$ref" : "#/definitions/DocumentPost"
+          }
+        },
+        "level" : {
+          "type" : "string"
+        },
+        "clientLayout" : {
+          "type" : "string"
+        }
+      }
+    },
+    "DeliveryInfo" : {
+      "type" : "object",
+      "required" : [ "deliveryAddressId", "deliveryType", "releaseItemsOnHold" ],
+      "properties" : {
+        "deliveryAddressId" : {
+          "type" : "string",
+          "description" : "If original address, discriminator will be: \"original\"\nIf one time address, discriminator will be: \"one-time\""
+        },
+        "deliveryType" : {
+          "type" : "string",
+          "description" : "can be standard or international."
+        },
+        "releaseItemsOnHold" : {
+          "type" : "string",
+          "description" : "0 - Do not release\n1 - First Available\n2 - Scheduled Release"
+        },
+        "deliveryAddress" : {
+          "$ref" : "#/definitions/Address"
+        }
+      }
+    },
+    "DocumentFileResponse" : {
+      "type" : "object",
+      "required" : [ "data", "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/File"
+          }
+        }
+      }
+    },
+    "Group" : {
+      "type" : "object",
+      "required" : [ "groupId", "groupName" ],
+      "properties" : {
+        "groupId" : {
+          "type" : "string"
+        },
+        "groupName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "File" : {
+      "type" : "object",
+      "properties" : {
+        "fileKey" : {
+          "type" : "string",
+          "description" : "Required if at file and group level"
+        },
+        "importDate" : {
+          "type" : "string"
+        },
+        "originalFileName" : {
+          "type" : "string"
+        },
+        "documentType" : {
+          "type" : "string"
+        },
+        "claimType" : {
+          "type" : "string"
+        },
+        "recipientType" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "transactionId" : {
+          "type" : "string",
+          "description" : "If it was managed, it is a required field. Transaction ID can be \"0000234567\". So we have to save it as string"
+        },
+        "transactionUser" : {
+          "type" : "string",
+          "description" : "If it was managed, it is a required field."
+        },
+        "transactionDate" : {
+          "type" : "string",
+          "description" : "If it was managed, it is a required field."
+        },
+        "groupId" : {
+          "type" : "string",
+          "description" : "Required at group level"
+        },
+        "groupName" : {
+          "type" : "string",
+          "description" : "Required at group level"
+        },
+        "documentKey" : {
+          "type" : "string",
+          "description" : "Required if at document level"
+        },
+        "claimNumber" : {
+          "type" : "string",
+          "description" : "Required at document level"
+        },
+        "checkNumber" : {
+          "type" : "string",
+          "description" : "Required at document level"
+        },
+        "checkAmount" : {
+          "type" : "string",
+          "description" : "Float value"
+        }
+      }
+    },
+    "Search" : {
+      "type" : "object",
+      "required" : [ "action", "level" ],
+      "properties" : {
+        "action" : {
+          "type" : "string",
+          "description" : "hold, release, purge, route, any (for document search screen)"
+        },
+        "level" : {
+          "type" : "string",
+          "description" : "document, file, group"
+        },
+        "claimNumber" : {
+          "type" : "string"
+        },
+        "checkNumber" : {
+          "type" : "string"
+        },
+        "ssn" : {
+          "type" : "string"
+        },
+        "employerGroups" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "fileKeys" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "claimType" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "recipientType" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "documentType" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "FilePost" : {
+      "type" : "object",
+      "required" : [ "fileKey" ],
+      "properties" : {
+        "fileKey" : {
+          "type" : "string"
+        },
+        "group" : {
+          "required" : [ "groupId", "groupName" ],
+          "type" : "object",
+          "description" : "Required in case of group level",
+          "properties" : {
+            "groupId" : {
+              "type" : "string"
+            },
+            "groupName" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "DocumentPost" : {
+      "type" : "object",
+      "required" : [ "documentKey" ],
+      "properties" : {
+        "documentKey" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Documents" : {
+      "type" : "object",
+      "required" : [ "documentKey" ],
+      "properties" : {
+        "documentKey" : {
+          "type" : "string"
+        },
+        "claimNumber" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "checkNumber" : {
+          "type" : "string"
+        },
+        "checkAmount" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "documentType" : {
+          "type" : "string"
+        },
+        "recipientType" : {
+          "type" : "string"
+        },
+        "claimType" : {
+          "type" : "string"
+        },
+        "transactionId" : {
+          "type" : "string",
+          "description" : "If it was managed, it is a required field."
+        },
+        "transactionUser" : {
+          "type" : "string",
+          "description" : "If it was managed, it is a required field."
+        },
+        "transactionDate" : {
+          "type" : "string",
+          "description" : "If it was managed, it is a required field."
+        },
+        "copyNumber" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "paymentIdentifier" : {
+          "type" : "string"
+        },
+        "trackingId" : {
+          "type" : "string",
+          "description" : "Would this be included in the response and if so, what would it be for?  USPS, etc?"
+        },
+        "importDate" : {
+          "type" : "string"
+        }
+      }
+    },
+    "FileKeysResponse" : {
+      "type" : "object",
+      "required" : [ "data", "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "description" : "Get File Keys response"
+    },
+    "DeliveryInfoMultiLevelResponse" : {
+      "type" : "object",
+      "required" : [ "data", "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data" : {
+          "$ref" : "#/definitions/Address"
+        }
+      }
+    },
+    "ErrorsDetailInfoListResponse" : {
+      "type" : "object",
+      "required" : [ "data" ],
+      "properties" : {
+        "total" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "offset" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "limit" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "required" : [ "errInfo", "errKey", "infoDetail", "recvDate" ],
+            "type" : "object",
+            "properties" : {
+              "errKey" : {
+                "type" : "string",
+                "description" : "400002820160331M1000002"
+              },
+              "errInfo" : {
+                "type" : "string"
+              },
+              "recvDate" : {
+                "type" : "string",
+                "format" : "date",
+                "description" : "1/12/2017 12:50:26 AM"
+              },
+              "infoDetail" : {
+                "$ref" : "#/definitions/ErrorsDetailInfoDetailResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ErrorsDetailInfoDetailResponse" : {
+      "type" : "object",
+      "required" : [ "data" ],
+      "properties" : {
+        "data" : {
+          "required" : [ "errCode", "errDesc", "errDetailInfo", "errResolution", "severity" ],
+          "type" : "object",
+          "properties" : {
+            "errCode" : {
+              "type" : "integer",
+              "format" : "int32"
+            },
+            "severity" : {
+              "type" : "string"
+            },
+            "errDesc" : {
+              "type" : "string"
+            },
+            "errResolution" : {
+              "type" : "string"
+            },
+            "errDetailInfo" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "ErrorsDetailPut" : {
+      "type" : "object",
+      "required" : [ "errStatus" ],
+      "properties" : {
+        "errStatus" : {
+          "type" : "string",
+          "description" : "new/processing/unknown/resolved"
+        }
+      }
+    },
+    "ErrorsDetailResponse" : {
+      "type" : "object",
+      "required" : [ "errDesc", "errId", "errStatus", "errType", "severity", "sysType" ],
+      "properties" : {
+        "errId" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "errType" : {
+          "type" : "string"
+        },
+        "sysType" : {
+          "type" : "string",
+          "description" : "test/live"
+        },
+        "errStatus" : {
+          "type" : "string",
+          "description" : "new/processing/unknown/resolved"
+        },
+        "severity" : {
+          "type" : "string",
+          "description" : "information/investigate/severe/critical"
+        },
+        "errDesc" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ErrorsResponse" : {
+      "type" : "object",
+      "required" : [ "errCount", "errId", "errStatus", "errType", "severity", "sysType" ],
+      "properties" : {
+        "errId" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "errType" : {
+          "type" : "string"
+        },
+        "sysType" : {
+          "type" : "string",
+          "description" : "test/live"
+        },
+        "errStatus" : {
+          "type" : "string",
+          "description" : "new/processing/unknown/resolved"
+        },
+        "severity" : {
+          "type" : "string",
+          "description" : "information/investigate/critical/severe"
+        },
+        "errCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ErrorReprocess" : {
+      "type" : "object",
+      "required" : [ "errId", "statusCode" ],
+      "properties" : {
+        "errId" : {
+          "type" : "integer"
+        },
+        "statusCode" : {
+          "type" : "string",
+          "description" : "12/B0"
+        }
+      }
+    },
+    "ErrorIdResponse" : {
+      "type" : "object",
+      "required" : [ "errId" ],
+      "properties" : {
+        "errId" : {
+          "type" : "string",
+          "description" : "12001"
+        }
+      }
+    },
+    "OnHoldReportPost" : {
+      "type" : "object",
+      "required" : [ "clientLayout", "days", "email" ],
+      "properties" : {
+        "email" : {
+          "type" : "string"
+        },
+        "days" : {
+          "type" : "string"
+        },
+        "clientLayout" : {
+          "type" : "string"
+        }
+      }
+    },
+    "UserReportResponse" : {
+      "type" : "object",
+      "required" : [ "data", "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number",
+          "format" : "int32"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/userReportObj"
+          }
+        }
+      }
+    },
+    "userReportObj" : {
+      "type" : "object",
+      "required" : [ "clientLayout", "email", "firstName", "id", "isActive" ],
+      "properties" : {
+        "webGroupId" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string",
+          "description" : "user id"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "isActive" : {
+          "type" : "string",
+          "description" : "Y/N"
+        },
+        "clientLayout" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "lastLogin" : {
+          "type" : "number"
+        },
+        "passwordExpire" : {
+          "type" : "number"
+        },
+        "roleNames" : {
+          "type" : "string"
+        },
+        "rolesDecription" : {
+          "type" : "string"
+        }
+      }
+    },
+    "roleSimple" : {
+      "type" : "object",
+      "required" : [ "roleDesc", "roleId", "roleName", "roleStatus" ],
+      "properties" : {
+        "roleId" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "roleName" : {
+          "type" : "string"
+        },
+        "roleDesc" : {
+          "type" : "string"
+        },
+        "roleStatus" : {
+          "type" : "string",
+          "description" : "Y or N"
+        }
+      }
+    },
+    "ucwAssociation" : {
+      "type" : "object",
+      "required" : [ "clientLayoutId", "clientLayoutName", "cwId", "roleIds", "ucwId", "webGroupId", "webGroupName" ],
+      "properties" : {
+        "clientLayoutId" : {
+          "type" : "string"
+        },
+        "clientLayoutName" : {
+          "type" : "string"
+        },
+        "webGroupId" : {
+          "type" : "string"
+        },
+        "webGroupName" : {
+          "type" : "string"
+        },
+        "ucwId" : {
+          "type" : "number"
+        },
+        "roleIds" : {
+          "type" : "array",
+          "items" : {
+            "type" : "number"
+          }
+        },
+        "cwId" : {
+          "type" : "number"
+        }
+      }
+    },
+    "UcwResponse" : {
+      "type" : "object",
+      "required" : [ "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number",
+          "format" : "int32"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data" : {
+          "$ref" : "#/definitions/ucwAssociation"
+        }
+      }
+    },
+    "UserProperty" : {
+      "type" : "object",
+      "properties" : {
+        "uid" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "lastLogon" : {
+          "type" : "number"
+        },
+        "lastActivity" : {
+          "type" : "number"
+        },
+        "company" : {
+          "type" : "string"
+        },
+        "title" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "birthday" : {
+          "type" : "string"
+        },
+        "phone" : {
+          "type" : "string"
+        },
+        "ext" : {
+          "type" : "string"
+        },
+        "fax" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "pwdExp" : {
+          "type" : "string"
+        },
+        "pwdHint" : {
+          "type" : "string"
+        },
+        "roleId" : {
+          "type" : "string"
+        },
+        "dataSrcId" : {
+          "type" : "string"
+        },
+        "online" : {
+          "type" : "boolean"
+        },
+        "userType" : {
+          "type" : "string"
+        },
+        "entries" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "roleId" : {
+                "type" : "string"
+              },
+              "dataSrcId" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "role" : {
+      "type" : "object",
+      "required" : [ "desc", "id", "name", "permissions", "status" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "desc" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "permissions" : {
+          "type" : "array",
+          "items" : {
+            "required" : [ "desc", "id", "name" ],
+            "type" : "object",
+            "properties" : {
+              "id" : {
+                "type" : "string"
+              },
+              "name" : {
+                "type" : "string"
+              },
+              "desc" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ucwDeleteRole" : {
+      "type" : "object",
+      "required" : [ "roleIds", "ucwId" ],
+      "properties" : {
+        "ucwId" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "ucwId"
+        },
+        "roleIds" : {
+          "type" : "array",
+          "description" : "Array of role Ids",
+          "items" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        },
+        "cwId" : {
+          "type" : "number",
+          "description" : "cwId"
+        }
+      }
+    },
+    "dataSource" : {
+      "type" : "object",
+      "required" : [ "def", "desc", "id", "status" ],
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "def" : {
+          "type" : "string"
+        },
+        "desc" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        }
+      }
+    },
+    "user" : {
+      "type" : "object",
+      "required" : [ "email", "firstName", "lastActivity", "lastLogon", "lastName", "pwdExp", "status", "uid" ],
+      "properties" : {
+        "uid" : {
+          "type" : "string"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "lastLogon" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "lastActivity" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "company" : {
+          "type" : "string"
+        },
+        "title" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "birthday" : {
+          "type" : "string"
+        },
+        "phone" : {
+          "type" : "string"
+        },
+        "ext" : {
+          "type" : "string"
+        },
+        "fax" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "boolean",
+          "description" : "Active / Inactive",
+          "default" : false
+        },
+        "pwdExp" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "password expires"
+        },
+        "pwdHint" : {
+          "type" : "string",
+          "description" : "password reminder"
+        }
+      }
+    },
+    "postRole" : {
+      "type" : "object",
+      "required" : [ "permissions", "roleDesc", "roleName", "roleStatus", "roleType" ],
+      "properties" : {
+        "roleName" : {
+          "type" : "string"
+        },
+        "roleDesc" : {
+          "type" : "string"
+        },
+        "roleType" : {
+          "type" : "string"
+        },
+        "roleStatus" : {
+          "type" : "string"
+        },
+        "permissions" : {
+          "$ref" : "#/definitions/permissions"
+        }
+      }
+    },
+    "permissionIds" : {
+      "type" : "array",
+      "items" : {
+        "type" : "object"
+      },
+      "example" : "\"[\\n                {permissionID: '00000001'},\\n                {permissionID: '00000002'},\\n                ......\\n    ]\""
+    },
+    "permissions" : {
+      "type" : "array",
+      "items" : {
+        "required" : [ "permissionDesc", "permissionId", "permissionName" ],
+        "type" : "object",
+        "properties" : {
+          "permissionId" : {
+            "type" : "string"
+          },
+          "permissionName" : {
+            "type" : "string"
+          },
+          "permissionDesc" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "ucwAddRole" : {
+      "type" : "object",
+      "required" : [ "cwId", "roleIds" ],
+      "properties" : {
+        "cwId" : {
+          "type" : "number",
+          "description" : "cwId"
+        },
+        "roleIds" : {
+          "type" : "array",
+          "description" : "Array of role Ids",
+          "items" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        },
+        "ucwId" : {
+          "type" : "number",
+          "description" : "Will be a null if the ucw does not exist."
+        }
+      },
+      "description" : "Add or Modify roles"
+    },
+    "SharedDocumentDeleteProperty" : {
+      "type" : "object"
+    },
+    "TestFileSubmitPost" : {
+      "type" : "object",
+      "properties" : {
+        "file" : {
+          "type" : "string"
+        },
+        "keys" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "releaseOnly" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "numOfDoc" : {
+          "type" : "string"
+        },
+        "groups" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "docTypes" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "description" : "it's a form post enctype='multipart/form-data'"
+    },
+    "TestFileOutput" : {
+      "type" : "object",
+      "properties" : {
+        "jobNum" : {
+          "type" : "string"
+        },
+        "desc" : {
+          "type" : "string"
+        },
+        "pdfs" : {
+          "type" : "array",
+          "items" : {
+            "required" : [ "exists", "id" ],
+            "type" : "object",
+            "properties" : {
+              "id" : {
+                "type" : "string"
+              },
+              "exists" : {
+                "type" : "string",
+                "description" : "\"Y\" or \"N\""
+              }
+            }
+          }
+        }
+      }
+    },
+    "TestFile" : {
+      "type" : "object",
+      "required" : [ "testId" ],
+      "properties" : {
+        "testId" : {
+          "type" : "string"
+        },
+        "submitDate" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "clientLayout" : {
+          "type" : "string"
+        },
+        "completeDate" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "submitter" : {
+          "type" : "string"
+        },
+        "originalName" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "access" : {
+          "type" : "string"
+        },
+        "hardOutput" : {
+          "type" : "string",
+          "description" : "\"0\" or \"1\""
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "documentLimit" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "0: stands for \"No Limit\""
+        },
+        "documentTypes" : {
+          "type" : "array",
+          "description" : "was docTypes 3/28/2017",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "employerGroups" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "errors" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "fileKeys" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "outputs" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TestFileOutput"
+          }
+        }
+      }
+    },
+    "SystemValues" : {
+      "type" : "object",
+      "properties" : {
+        "claimType" : {
+          "type" : "array",
+          "description" : "[{id: 1, description: \"Test\"}, {id: 2, description: \"Test 2\"}]",
+          "items" : {
+            "type" : "object"
+          }
+        },
+        "recipientType" : {
+          "type" : "array",
+          "description" : "[{id: 1, description: \"Test\"}, {id: 2, description: \"Test 2\"}]",
+          "items" : {
+            "type" : "object"
+          }
+        },
+        "documentType" : {
+          "type" : "array",
+          "description" : "[{id: 1, description: \"Test\"}, {id: 2, description: \"Test 2\"}]",
+          "items" : {
+            "type" : "object"
+          }
+        },
+        "insertType" : {
+          "type" : "array",
+          "description" : "[{id: 1, description: \"Test\"}, {id: 2, description: \"Test 2\"}]",
+          "items" : {
+            "type" : "object"
+          }
+        },
+        "extraInsertsForm" : {
+          "type" : "array",
+          "description" : "[{id: 1, description: \"Test\"}, {id: 2, description: \"Test 2\"}]",
+          "items" : {
+            "type" : "object"
+          }
+        }
+      }
+    },
+    "SystemValuesResponse" : {
+      "type" : "object",
+      "required" : [ "data", "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data" : {
+          "$ref" : "#/definitions/SystemValues"
+        }
+      }
+    },
+    "Messages" : {
+      "type" : "object",
+      "required" : [ "endDate", "id", "startDate" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Unique ID for the message"
+        },
+        "title" : {
+          "type" : "string",
+          "description" : "Subject of the message"
+        },
+        "startDate" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Message start date"
+        },
+        "endDate" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Message Expiration date"
+        },
+        "userType" : {
+          "type" : "string",
+          "description" : "Internal, External, All. Default all"
+        },
+        "message" : {
+          "type" : "string",
+          "description" : "Actual Message"
+        }
+      }
+    },
+    "MessageResponse" : {
+      "type" : "object",
+      "required" : [ "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Messages"
+          }
+        }
+      }
+    },
+    "RuleTypeSingle" : {
+      "type" : "object",
+      "required" : [ "ruleTypeId", "ruleTypeName", "ruleTypeNo" ],
+      "properties" : {
+        "ruleTypeNo" : {
+          "type" : "integer"
+        },
+        "ruleTypeId" : {
+          "type" : "string"
+        },
+        "ruleTypeName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "EmployerGroupPost" : {
+      "type" : "object",
+      "required" : [ "clientID", "desc", "hierarchy1", "isActive" ],
+      "properties" : {
+        "clientID" : {
+          "type" : "integer"
+        },
+        "desc" : {
+          "type" : "string",
+          "description" : "groupName"
+        },
+        "isActive" : {
+          "type" : "string",
+          "description" : "Y/N/T"
+        },
+        "hierarchy1" : {
+          "type" : "string",
+          "description" : "_ABF_ALL_"
+        },
+        "hierarchy2" : {
+          "type" : "string"
+        },
+        "hierarchy3" : {
+          "type" : "string"
+        },
+        "hierarchy4" : {
+          "type" : "string"
+        },
+        "hierarchy5" : {
+          "type" : "string"
+        },
+        "hierarchy6" : {
+          "type" : "string"
+        }
+      }
+    },
+    "EGPutStatus" : {
+      "type" : "object",
+      "required" : [ "groupId", "isActive" ],
+      "properties" : {
+        "groupId" : {
+          "type" : "integer"
+        },
+        "isActive" : {
+          "type" : "string",
+          "description" : "Y/N"
+        }
+      }
+    },
+    "EmployerGroupSingle" : {
+      "type" : "object",
+      "required" : [ "clientID", "desc", "groupId", "hierarchy1", "isActive", "lastModified", "lastModifier" ],
+      "properties" : {
+        "clientID" : {
+          "type" : "integer"
+        },
+        "groupId" : {
+          "type" : "integer"
+        },
+        "desc" : {
+          "type" : "string",
+          "description" : "groupName"
+        },
+        "isActive" : {
+          "type" : "string",
+          "description" : "Y/N/T"
+        },
+        "hierarchy1" : {
+          "type" : "string",
+          "description" : "_ABF_ALL_"
+        },
+        "hierarchy2" : {
+          "type" : "string"
+        },
+        "hierarchy3" : {
+          "type" : "string"
+        },
+        "hierarchy4" : {
+          "type" : "string"
+        },
+        "hierarchy5" : {
+          "type" : "string"
+        },
+        "hierarchy6" : {
+          "type" : "string"
+        },
+        "ruleAssociations" : {
+          "type" : "array",
+          "description" : "This is under discussion, but would make the front end have less calls to make.  Canw e do this?",
+          "items" : {
+            "$ref" : "#/definitions/groupAssociation"
+          }
+        },
+        "lastModified" : {
+          "type" : "string"
+        },
+        "lastModifier" : {
+          "type" : "string"
+        }
+      }
+    },
+    "GroupAssociationsResponse" : {
+      "type" : "object",
+      "required" : [ "data", "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/groupAssociation"
+          }
+        }
+      }
+    },
+    "groupAssociation" : {
+      "type" : "object",
+      "required" : [ "groupId", "groupRuleMapId", "groupRuleMapStatus", "ruleDesc", "ruleId", "ruleStatus", "ruleTypeId", "ruleVersion" ],
+      "properties" : {
+        "groupRuleMapId" : {
+          "type" : "number",
+          "description" : "Association Id?"
+        },
+        "groupId" : {
+          "type" : "string"
+        },
+        "ruleId" : {
+          "type" : "string"
+        },
+        "ruleTypeId" : {
+          "type" : "string"
+        },
+        "ruleDesc" : {
+          "type" : "string"
+        },
+        "groupRuleMapStatus" : {
+          "type" : "string"
+        },
+        "groupName" : {
+          "type" : "string"
+        },
+        "ruleVersion" : {
+          "type" : "string"
+        },
+        "ruleStatus" : {
+          "type" : "string"
+        }
+      },
+      "example" : "{\n\"groupRuleMapId\":315,\n\"groupId\":\"687\",\n\"ruleId\":\"4109\",\n\"ruleTypeId\":\"CHT\",\n\"groupRuleMapStatus\":\"L\",\n\"groupName\":\"Some Group Name\",\n\"ruleVersion\":\"T\",\n\"ruleStatus\":\"Y\",\n\"ruleDesc\": 'Some rule name\"'}"
+    },
+    "RuleAssociationsResponse" : {
+      "type" : "object",
+      "required" : [ "data", "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ruleAssociation"
+          }
+        }
+      },
+      "description" : "Response for All groups for a given rule"
+    },
+    "ruleAssociation" : {
+      "type" : "object",
+      "required" : [ "groupId", "groupRuleMapId", "groupRuleMapStatus" ],
+      "properties" : {
+        "groupRuleMapId" : {
+          "type" : "number",
+          "description" : "Association Id?"
+        },
+        "groupId" : {
+          "type" : "string"
+        },
+        "groupRuleMapStatus" : {
+          "type" : "string"
+        },
+        "groupName" : {
+          "type" : "string"
+        }
+      },
+      "example" : "{\n\"groupRuleMapId\":315,\n\"groupId\":\"687\",\n\"groupRuleMapStatus\":\"L\",\n\"groupName\":\"Some Group Name\",\n}"
+    },
+    "associationDetail" : {
+      "type" : "object",
+      "required" : [ "groupId", "ruleId", "ruleType" ],
+      "properties" : {
+        "groupId" : {
+          "type" : "string"
+        },
+        "ruleId" : {
+          "type" : "string"
+        },
+        "ruleType" : {
+          "type" : "string"
+        }
+      },
+      "example" : "{\n\"groupId\": \"211\",\n\"ruleId\": \"1357\",\n\"ruleType\": \"CDM\",\n}"
+    },
+    "StandardResponse" : {
+      "type" : "object",
+      "required" : [ "data", "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object"
+          }
+        },
+        "total" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "offset" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "limit" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ErrorResponse" : {
+      "type" : "object",
+      "required" : [ "messages", "status", "statusCode" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusCode" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  }
+}
